@@ -36,10 +36,10 @@ function [xf, iter] = limBGFS_cyclic(f, x0, maxiter, tol, m)
         
         %Calculate a new dk
         iter  = iter + 1;
-        if iter < m
-            dk = -calcHg(S, G, gnew, startAt, iter);
+        if iter <= m
+            dk = -calcHg(S(:, 1:iter), G(:, 1:iter), gnew, startAt);
         else
-            dk = -calcHg(S, G, gnew, startAt, m);
+            dk = -calcHg(S, G, gnew, startAt);
         end
         
         % Advance towards xk + alpha*dk
@@ -52,44 +52,29 @@ function [xf, iter] = limBGFS_cyclic(f, x0, maxiter, tol, m)
     end
 end
 
-function [q] = calcHg(S, G, gnew, startAt, len)
+function [q] = calcHg(S, G, gnew, startAt)
     % Initialize rhos and alphas
     q = gnew;
-    m = len;
-    rhos = zeros(m, 1);
+    m = length(S(1, :));
+    rhos = 1 ./ dot(S, G, 1);
     alphas = zeros(m, 1);
     
-    % Parallel index to iterate through S and G starting at (startAt) and ending at (startAt - 1), increasing the index by one each step
-    j = startAt;
-    for i = 1:m
+    % Indices from startAt+1 to startAt increasing by one and looping around
+    indices = mod((0:m-1) + startAt, m) + 1;
+    for i = fliplr(indices)
         
-        rhos(i) = 1 / dot(S(:, j), G(:, j));
-        alphas(i) = dot(S(:, j), q) * rhos(i);
-        
-        q = q - alphas(i)*G(:, j);
-        j = mod(j, m) + 1;
+        alphas(i) = dot(S(:, i), q) * rhos(i);
+        q = q - alphas(i)*G(:, i);
 
     end
 
     % Calculate delta
-    delta = 1 / (rhos(1) * dot(G(:, startAt), G(:, startAt)));
-    
+    delta = 1 / (rhos(startAt) * dot(G(:, startAt), G(:, startAt)));
     q = delta * q;
     
-    % Parallel index to iterate through S and G starting at (startAt - 1) and ending at (startAt), decreasing the index by 1 each step
-    j = j - 1;
-    if j == 0
-        j = m;
-    end
-
-    for i = m:-1:1
-        beta = dot(G(:, j), q)*rhos(i);
-        q = q + (alphas(i) - beta) * S(:, j);
-        
-        j = j - 1;
-        if j == 0
-            j = m;
-        end
+    for i = indices
+        beta = dot(G(:, i), q) * rhos(i);
+        q = q + (alphas(i) - beta) * S(:, i);
     end
 
 end

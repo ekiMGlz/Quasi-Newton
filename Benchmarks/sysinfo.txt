@@ -1,0 +1,3 @@
+Processor: Intel(R) Core(TM) i7-7700HQ CPU @ 2.80GHz, 2808 Mhz, 4 Core(s), 8 Logical Processor(s)
+Cache: 6.0 MB
+Installed Physical Memory (RAM): 16.0 GB

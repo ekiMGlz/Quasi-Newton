@@ -78,5 +78,5 @@ writetable(T3, "../Benchmarks/limBGFS_rosenbrock_benchmark.csv");
 
 %% Export Computer Benchmark
 
-com_benchmark = bench;
-csvwrite("../Benchmarks/computer_matlab_benchmark.csv", com_benchmark);
+% com_benchmark = bench;
+% csvwrite("../Benchmarks/computer_matlab_benchmark.csv", com_benchmark);
