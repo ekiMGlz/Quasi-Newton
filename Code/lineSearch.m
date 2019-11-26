@@ -35,7 +35,7 @@ function [alpha, gnew] = lineSearch(f, xk, dk, gk)
 
     end
 
-    assert(abs(dot(gnew, dk)) <= -c2*gTd, "No se satisface W2")
+%    assert(abs(dot(gnew, dk)) <= -c2*gTd, "No se satisface W2")
 end
 
 function [alpha, gnew] = zoom(a_low, a_high, f, xk, dk, fk, gTd)
@@ -69,5 +69,5 @@ function [alpha, gnew] = zoom(a_low, a_high, f, xk, dk, fk, gTd)
         end
     end
 
-    assert(abs(d_phi) <= -c2*gTd, "No se satisface W2")
+%     assert(abs(d_phi) <= -c2*gTd, "No se satisface W2")
 end
