@@ -1,8 +1,8 @@
 function [x, i] = TRSR1(f, x0, itmax, tol)
 
     % Initialize some parameters used in the alg.
-    eta = 1e-2;
-    delta_max = 2;
+    eta = 1e-1;
+    delta_max = 1.5;
     delta = 1;
     n = length(x0);
     r = 1e-6;

@@ -6,18 +6,17 @@ leq1000 = sum(N <= 1000);
 
 bench_SR1 = zeros(leq200, 4);
 bench_BGFS = zeros(leq200, 4);
-bench_limBGMS = zeros(leq1000*length(mem), 5);
+bench_limBGFS = zeros(leq1000*length(mem), 5);
 
 i1 = 1;
 i2 = 1;
-i3 = 1;
 
 tol = 1e-5;
-maxIters = 10000;
+maxIters = 2000;
 
 for n = N
-    x0 = repmat([-1.2; 1], n, 1)
-    f = @(x) rosenbrock(x)
+    x0 = repmat([-1.2; 1], n, 1);
+    f = @(x) rosenbrock(x);
 
     if n <= 200
         tic;
@@ -28,8 +27,36 @@ for n = N
 
         tic;
         [xf, iters] = lineBGFS(f, x0, maxIters, tol);
-
-    elseif n <= 1000
+        t = toc;
         
+        bench_BGFS(i1, :) = [n, t, iters, norm(grad(f, xf), 'inf')];
+
+        i1 = i1 + 1;
+
+    end
+    
+    if n <= 1000
+        for m = mem
+            tic;
+            [xf, iters] = limBGFS_cyclic(f, x0, maxIters, tol, m);
+            t = toc;
+            
+            bench_limBGFS(i2, :) = [n, m, t, iters, norm(grad(f, xf), 'inf')];
+            
+            i2 = i2 + 1;
+        end
     end
 end
+
+header1 = {'n', 'Tiempo', 'Iteraciones', 'Norm_gf'};
+header2 = {'n', 'Memoria', 'Tiempo', 'Iteraciones', 'Norm_gf'};
+
+array2table(bench_SR1, "VariableNames", header1)
+array2table(bench_BGFS, "VariableNames", header1)
+array2table(bench_limBGFS, "VariableNames", header2)
+
+com_benchmark = bench;
+csvwrite("../Benchmarks/computer_matlab_benchmark.csv", com_benchmark);
+csvwrite("../Benchmarks/SR1_rosenbrock_benchmark.csv", bench_SR1);
+csvwrite("../Benchmarks/BGFS_rosenbrock_benchmark.csv", bench_BGFS);
+csvwrite("../Benchmarks/limBGFS_rosenbrock_benchmark.csv", bench_limBGFS);
