@@ -1,4 +1,14 @@
-function [x, i] = TRSR1(f, x0, itmax, tol)
+function [xf, iter] = TRSR1(f, x0, maxIter, tol)
+% TRSR1 - Find a local minima of f using the trust region method with 
+% Symmetric Rank 1 Updates for the  approximated Hessian
+%   Input:
+%       f: Function handle
+%       x0: Initial point
+%       maxIter: Maximum number of iterations
+%       tol: Tolerance for the inf norm of the gradient
+%   Output:
+%       xf: Final approximation of x*, the local minima of f
+%       iter: Number of iterations to reach xf
 
     % Initialize some parameters used in the alg.
     eta = 1e-1;
@@ -7,8 +17,8 @@ function [x, i] = TRSR1(f, x0, itmax, tol)
     n = length(x0);
     r = 1e-6;
     
-    % Obtain the first values of x_k, g_k and B_k
-    i = 0;
+    % Obtain the first values of x_k, g_k, B_k and H_k
+    iter = 0;
     
     if iscolumn(x0)
         x_k = x0;
@@ -20,9 +30,9 @@ function [x, i] = TRSR1(f, x0, itmax, tol)
     H_k = speye(n);
     B_k = speye(n);
     
-    while norm(g_k, inf) > tol && i < itmax
+    while norm(g_k, inf) > tol && iter < maxIter
         
-        % If s_k is not dd, use pCauchy
+        % If s_k is not a descent direction, use pCauchy
         s_k = -H_k*g_k;
         norm_p = norm(s_k);
         if dot(s_k, g_k) < 0
@@ -45,30 +55,31 @@ function [x, i] = TRSR1(f, x0, itmax, tol)
         end
         
         % If the quality is above the minimum quality, then advance towards
-        % p_k, and calculate the new gradient and hessian for x_k+1
+        % p_k, and calculate the new gradient
         if quality > eta
             
             x_k = x_k + s_k;
             g_new = grad(f, x_k);
             
-            % If secant eq is met, then update H_k and B_k
+            % If the secant equation is met, then update H_k and B_k
             gamma = (g_new - g_k);
             gamma_shift = gamma - B_k*s_k;
             dot_gammashift_s = dot(gamma_shift, s_k);
             if abs(dot_gammashift_s) >= r * norm(s_k) * norm(gamma_shift)
+
                 B_k = B_k + (1/dot_gammashift_s) * (gamma_shift*gamma_shift');
-                
                 s_shift = s_k - H_k*gamma;
                 H_k = H_k + (1/dot(s_shift, gamma)) * (s_shift)*(s_shift)';
+                
             end
             
             g_k = g_new;
-            i = i + 1;
+            iter = iter + 1;
         end
         
     end
 
-    x = x_k;
+    xf = x_k;
     
     
 end

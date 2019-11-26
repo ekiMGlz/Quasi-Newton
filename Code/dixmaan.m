@@ -6,7 +6,7 @@ function [y] = dixmaan(x)
 %   Output:
 %       y: Dixmaand function evaluated at x
 %
-    % intialize parameters
+    % Intialize parameters
     alpha = 1;
     beta = 0.26;
     gamma = 0.26;
@@ -17,11 +17,11 @@ function [y] = dixmaan(x)
     k3 = 0;
     k4 = 0;
     
-    % get vector size
+    % Get vector size
     n = length(x);
     m = floor(n/3);
     
-    % initialize result as 1
+    % Initialize result as 1
     y = 1;
     
     for i=1:n

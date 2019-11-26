@@ -31,7 +31,6 @@ function [xf, iter] = limBGFS(f, x0, maxiter, tol, m)
             dk = -calcHg(S, G, gnew);
         end
 
-
         xf = xf + S(:, 1);
         gk = gnew;
         
