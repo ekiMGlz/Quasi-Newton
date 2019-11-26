@@ -51,9 +51,17 @@ end
 header1 = {'n', 'Tiempo', 'Iteraciones', 'Norm_gf'};
 header2 = {'n', 'Memoria', 'Tiempo', 'Iteraciones', 'Norm_gf'};
 
-array2table(bench_SR1, "VariableNames", header1)
-array2table(bench_BGFS, "VariableNames", header1)
-array2table(bench_limBGFS, "VariableNames", header2)
+T1 = array2table(bench_SR1, "VariableNames", header1);
+T2 = array2table(bench_BGFS, "VariableNames", header1);
+T3 = array2table(bench_limBGFS, "VariableNames", header2);
+
+setHeading(T1, "SR1");
+setHeading(T2, "BGFS");
+setHeading(T3, "limBGFS");
+
+disp(T1);
+disp(T2);
+disp(T3);
 
 com_benchmark = bench;
 csvwrite("../Benchmarks/computer_matlab_benchmark.csv", com_benchmark);
