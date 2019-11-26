@@ -1,4 +1,4 @@
-function [x, msg] = TRSR1(f, x0, itmax, tol)
+function [x, i] = TRSR1(f, x0, itmax, tol)
 
     % Initialize some parameters used in the alg.
     eta = 1e-2;
@@ -69,16 +69,7 @@ function [x, msg] = TRSR1(f, x0, itmax, tol)
     end
 
     x = x_k;
-    if norm(g_k, inf) < tol
-        % Verify if the Hessian is (semi)definite positive to see if we've found a local minimum
-        msg = "Convergio en " + i + ' iteraciones- ';
-        l_k = min(eigs(B_k));
-        if l_k >= 0
-            msg = msg + "Hessiano es positivo (semi)definido, por lo tanto, se encontro minimo local.";
-        end
-    else
-        msg = "El metodo no convergio";
-    end
+    
     
 end
 

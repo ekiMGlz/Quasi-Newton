@@ -1,4 +1,4 @@
-function [xf, iter] = limBGFS(f, x0, tol, maxiter, m)
+function [xf, iter] = limBGFS(f, x0, maxiter, tol, m)
     %UNTITLED2 Summary of this function goes here
     %   Detailed explanation goes here
     

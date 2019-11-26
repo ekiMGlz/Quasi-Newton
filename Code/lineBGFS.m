@@ -1,4 +1,4 @@
-function [xf, iter] = lineBGFS(f, x0, tol, maxiter)
+function [xf, iter] = lineBGFS(f, x0, maxiter, tol)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 
